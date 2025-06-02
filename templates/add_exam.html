@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Exam</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Admin Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+        </div>
+        
+        <h2 class="mb-4">Add Exam</h2>
+        <form method="POST" action="{{ url_for('add_exam') }}">
+            <div class="form-group">
+                <label for="exam_name">Exam Name</label>
+                <input type="text" class="form-control" id="exam_name" name="exam_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="semester">Semester</label>
+                <select class="form-control" id="semester" name="semester" required>
+                    <option value="" disabled selected>Select Semester</option>
+                    <option value="1">1st Semester</option>
+                    <option value="2">2nd Semester</option>
+                    <option value="3">3rd Semester</option>
+                    <option value="4">4th Semester</option>
+                    <option value="5">5th Semester</option>
+                    <option value="6">6th Semester</option>
+                    <option value="7">7th Semester</option>
+                    <option value="8">8th Semester</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="exam_date">Exam Date</label>
+                <input type="date" class="form-control" id="exam_date" name="exam_date" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Add Exam</button>
+        </form>
+    </div>
+</body>
+</html>

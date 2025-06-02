@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+
+        .student-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .student-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .results-table {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Student Details Section -->
+        <div class="student-details">
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="{{ url_for('static', filename='uploads/' + student.profile_image) }}" alt="Profile Image" class="student-image">
+                </div>
+                <div class="col-md-10">
+                    <h2>{{ student.name }}</h2>
+                    <p><strong>Student ID:</strong> {{ student.student_id }}</p>
+                    <p><strong>Course:</strong> {{ student.course_name }}</p>
+                    <p><strong>Year:</strong> {{ student.year }}</p>
+                    <p><strong>Gender:</strong> {{ student.gender }}</p>
+                    <p><strong>Father's Name:</strong> {{ student.father_name }}</p>
+                    <p><strong>Medium:</strong> {{ student.medium }}</p>
+                </div>
+            </div>
+        </div>
+        <div>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-table">
+            <h3>Exam Results</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Exam Name</th>
+                        <th>Semester</th>
+                        <th>Date</th>
+                        <th>Marks</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                        {% set exam = exams.get(result.exam_id) %}
+                        <tr>
+                            <td>{{ exam.exam_name }}</td>
+                            <td>{{ exam.semester }}</td>
+                            <td>{{ exam.date }}</td>
+                            <td>{{ result.marks }}</td>
+                            <td>{{ result.grade }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between mb-4">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Admin Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+        </div>
+
+        <h2 class="mb-4">Add Student</h2>
+        <form method="POST" action="{{ url_for('add_student') }}" class="needs-validation" novalidate enctype="multipart/form-data">
+            <div class="form-group mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+                <div class="invalid-feedback">Please enter the student's name.</div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="student_id" class="form-label">Student ID</label>
+                <input type="number" class="form-control" id="student_id" name="student_id" required>
+                <div class="invalid-feedback">Please enter the student's ID.</div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="profile_image" class="form-label">Image</label>
+                <input type="file" class="form-control" id="profile_image" name="profile_image" required>
+                <div class="invalid-feedback">Please upload a valid image.</div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="course_name" class="form-label">Course Name</label>
+                <input type="text" class="form-control" id="course_name" name="course_name" required>
+                <div class="invalid-feedback">Please enter the course name.</div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="year" class="form-label">Year</label>
+                <input type="number" class="form-control" id="year" name="year" required>
+                <div class="invalid-feedback">Please enter the year.</div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="gender" class="form-label">Gender</label>
+                <select class="form-select" id="gender" name="gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <div class="invalid-feedback">Please select a gender.</div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="father_name" class="form-label">Father's Name</label>
+                <input type="text" class="form-control" id="father_name" name="father_name" required>
+                <div class="invalid-feedback">Please enter the father's name.</div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="medium" class="form-label">Medium</label>
+                <input type="text" class="form-control" id="medium" name="medium" required>
+                <div class="invalid-feedback">Please enter the medium.</div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+                <div class="invalid-feedback">Please enter a password.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Student</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <!-- Optional: Add form validation script -->
+    <script>
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
+</body>
+</html>
+
+
+
+
+
+

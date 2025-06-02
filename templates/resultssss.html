@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Start your development with LeadMark landing page.">
+    <meta name="author" content="Devcrud">
+    <title>SRK</title>
+    <link rel="icon" href="../static/assets/imgs/logo.png" type="image/svg+xml">
+    <!-- font icons -->
+    <link rel="stylesheet" href="../static/assets/vendors/themify-icons/css/themify-icons.css">
+    <!-- Bootstrap + LeadMark main styles -->
+    <link rel="stylesheet" href="../static/assets/css/leadmark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <style>
+        .student-details {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .student-details .details {
+            flex-basis: 50%;
+            padding-right: 20px;
+        }
+
+        .student-details .details p {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .student-details .details p span.label {
+            font-weight: bold;
+            margin-right: 5px;
+            display: inline-block;
+            min-width: 300px; /* Adjust width as needed */
+        }
+
+        .student-details .details p span.value {
+            display: inline-block;
+        }
+
+        .student-details .image-container {
+            flex-basis: 50%;
+            text-align: center;
+        }
+
+        .student-details img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+
+        /* Add style for failed exam rows */
+        .failed-exam td {
+            color: red; /* Set font color to red */
+        }
+    </style>
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
+    <div class="loader"></div>
+    <script>
+        window.addEventListener("load", () => {
+            const loader = document.querySelector(".loader");
+          
+            loader.classList.add("loader--hidden");
+          
+            loader.addEventListener("transitionend", () => {
+              document.body.removeChild(loader);
+            });
+          });          
+    </script>   
+    <!-- page Navigation -->
+    
+    <nav class="navbar custom-navbar navbar-expand-md navbar-light fixed-top" data-spy="affix" data-offset-top="10">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">
+                <img src="../static/assets/imgs/logo.png" alt=""><b style="font-size:30px; color: white; font-weight:normal;;">SRK Institute of Technology</b>
+            </a>
+            <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">                     
+
+                    
+                    {% if admin=='Student' %}
+
+                    <li class="nav-item">
+                        <a href="/personal" class="nav-link">Personal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/results" class="nav-link">Results</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/backlogs" class="nav-link">Backlogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/student_profile" class="nav-link">My Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/logout" class="ml-4 nav-link btn btn-primary btn-sm rounded">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="/login" class="ml-4 nav-link btn btn-primary btn-sm rounded">Login</a>
+                    </li>
+
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Of Second Navigation -->
+
+    <!-- Page Header -->
+    <header class="header">
+        <div class="overlay">
+            <h1 class="mt-4">{{page_name}}</h1>
+            <br>
+
+        </div>
+        <div class="mouse-icon"><div class="wheel"></div></div>
+        <div class="container"></div>
+    </header>
+    <!-- End Of Page Header -->
+
+
+    
+    <div class="my-tab">
+        <div class="over" style="display: inline-block">   
+            <center><h1>Exam {{page_name}}</h1></center><br>
+            
+            <table class="table table-striped" align='center'>
+                <thead>
+                    <tr>
+                        <th>Semester</th>
+                        <th>Exam Code</th>
+                        <th>Exam Name</th>
+                        <th>Grade</th>
+                        <th>Pass/Fail</th>
+                        <!-- Add more columns as needed -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for semester, results in grouped_results.items() %}
+                        <tr><td colspan="5"><strong>Semester {{ semester }} :</strong></td></tr>
+                        {% for result in results %}
+                            <tr {% if result.pass_fail == 'Fail' %}class="failed-exam"{% endif %}>
+                                <td>&nbsp;</td>
+                                <td>{{ result.exam_code }}</td>
+                                <td>{{ result.exam_name }}</td>
+                                <td>{{ result.grade }}</td>
+                                <td>{{ result.pass_fail }}</td>
+                                <!-- Add more columns as needed -->
+                            </tr>
+                        {% endfor %}
+                        <tr><td colspan="5">&nbsp;</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+    <!-- core  -->
+    <script src="../static/assets/vendors/jquery/jquery-3.4.1.js"></script>
+    <script src="../static/assets/vendors/bootstrap/bootstrap.bundle.js"></script>
+
+    <!-- bootstrap 3 affix -->
+    <script src="../static/assets/vendors/bootstrap/bootstrap.affix.js"></script>
+
+    <!-- Isotope -->
+    <script src="../static/assets/vendors/isotope/isotope.pkgd.js"></script>
+
+    <!-- LeadMark js -->
+    <script src="../static/assets/js/leadmark.js"></script>
+
+</body>
+</html>

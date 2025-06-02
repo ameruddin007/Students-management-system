@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - College Exam Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .admin-dashboard-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-dashboard-container">
+        <h2 class="text-center mb-4">Admin Dashboard</h2>
+        <p>Welcome, {{ admin.username }}!</p>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+
+        <h3 class="mt-4">Manage Students</h3>
+        <a href="{{ url_for('add_student') }}" class="btn btn-success">Add Student</a>
+
+        <h3 class="mt-4">Manage Exams</h3>
+        <a href="{{ url_for('add_exam') }}" class="btn btn-primary">Add Exam</a>
+
+        <h3 class="mt-4">Manage Results</h3>
+        <a href="{{ url_for('add_result') }}" class="btn btn-warning">Add Result</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
