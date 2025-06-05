@@ -81,6 +81,10 @@ class Admin(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    # Add any additional admin-specific fields here
+
+    def __init__(self, username):
+        self.username = username
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
@@ -119,6 +123,7 @@ def login():
             password = request.form['password']
             user_type = request.form['user_type']
 
+            user = None
             if user_type == 'student':
                 user = Student.query.filter_by(student_id=user_id).first()
             elif user_type == 'admin':
@@ -127,20 +132,26 @@ def login():
                 flash('Invalid user type', 'danger')
                 return redirect(url_for('login'))
 
-            if user and user.check_password(password):
-                login_user(user)
-                if isinstance(user, Student):
-                    return redirect(url_for('dashboard'))
-                elif isinstance(user, Admin):
-                    return redirect(url_for('admin_dashboard'))
+            if user:
+                if user.check_password(password):
+                    login_user(user)
+                    flash('Login successful!', 'success')
+                    
+                    if user_type == 'student':
+                        return redirect(url_for('dashboard'))
+                    else:
+                        return redirect(url_for('admin_dashboard'))
+                else:
+                    flash('Invalid password', 'danger')
             else:
-                flash('Invalid credentials', 'danger')
-                db.session.rollback()
+                flash('User not found', 'danger')
+
+            db.session.rollback()
 
         return render_template('login.html')
     except Exception as e:
         db.session.rollback()
-        flash('An error occurred during login', 'danger')
+        flash(f'An error occurred during login: {str(e)}', 'danger')
         return redirect(url_for('login'))
 
 @app.route('/logout')
@@ -227,8 +238,115 @@ def add_student():
         flash("An error occurred while adding student", "danger")
         return redirect(url_for('admin_dashboard'))
 
-# Other routes (add_exam, add_result) follow similar pattern with try/except blocks
 
+@app.route('/add_exam', methods=['GET', 'POST'])
+@login_required
+def add_exam():
+    try:
+        if not isinstance(current_user, Admin):
+            flash("Unauthorized access", "danger")
+            return redirect(url_for('admin_dashboard'))
+
+        if request.method == 'POST':
+            exam_name = request.form.get('exam_name')
+            exam_date = request.form.get('exam_date')
+            semester = request.form.get('semester')
+
+            if not all([exam_name, exam_date, semester]):
+                flash("All fields are required", "danger")
+                return redirect(url_for('add_exam'))
+
+            try:
+                semester = int(semester)
+            except ValueError:
+                flash("Semester must be a number", "danger")
+                return redirect(url_for('add_exam'))
+
+            new_exam = Exam(
+                exam_name=exam_name,
+                date=exam_date,
+                semester=semester
+            )
+
+            db.session.add(new_exam)
+            db.session.commit()
+            flash("Exam added successfully!", "success")
+            return redirect(url_for('admin_dashboard'))
+        
+        return render_template('add_exam.html')
+    
+    except IntegrityError:
+        db.session.rollback()
+        flash("An exam with these details already exists!", "danger")
+        return redirect(url_for('add_exam'))
+    except Exception as e:
+        db.session.rollback()
+        flash(f"An error occurred while adding exam: {str(e)}", "danger")
+        return redirect(url_for('admin_dashboard'))
+
+@app.route('/add_result', methods=['GET', 'POST'])
+@login_required
+def add_result():
+    try:
+        if not isinstance(current_user, Admin):
+            flash("Unauthorized access", "danger")
+            return redirect(url_for('admin_dashboard'))
+
+        students = Student.query.order_by(Student.name).all()
+        exams = Exam.query.order_by(Exam.date.desc()).all()
+
+        if request.method == 'POST':
+            student_id = request.form.get('student_id')
+            exam_id = request.form.get('exam_id')
+            marks = request.form.get('marks')
+
+            if not all([student_id, exam_id, marks]):
+                flash("All fields are required", "danger")
+                return redirect(url_for('add_result'))
+
+            try:
+                marks = int(marks)
+                if marks < 0 or marks > 100:
+                    flash("Marks must be between 0 and 100", "danger")
+                    return redirect(url_for('add_result'))
+            except ValueError:
+                flash("Marks must be a number", "danger")
+                return redirect(url_for('add_result'))
+
+            # Check if result already exists
+            existing_result = Result.query.filter_by(
+                student_id=student_id,
+                exam_id=exam_id
+            ).first()
+
+            if existing_result:
+                flash("This student already has a result for this exam", "warning")
+                return redirect(url_for('add_result'))
+
+            grade = calculate_grade(marks)
+            new_result = Result(
+                student_id=student_id,
+                exam_id=exam_id,
+                marks=marks,
+                grade=grade
+            )
+
+            db.session.add(new_result)
+            db.session.commit()
+            flash("Result added successfully!", "success")
+            return redirect(url_for('admin_dashboard'))
+
+        return render_template('add_result.html', students=students, exams=exams)
+    
+    except IntegrityError as e:
+        db.session.rollback()
+        flash("Database error occurred while adding result", "danger")
+        return redirect(url_for('add_result'))
+    except Exception as e:
+        db.session.rollback()
+        flash(f"An error occurred while adding result: {str(e)}", "danger")
+        return redirect(url_for('admin_dashboard'))
+    
 def calculate_grade(marks):
     return 'O' if marks >= 90 else 'A' if marks >= 80 else 'B' if marks >= 70 else 'C' if marks >= 60 else 'D' if marks >= 50 else 'F'
 
